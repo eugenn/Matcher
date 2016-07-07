@@ -1,5 +1,6 @@
-package org.match;
+package org.match.controller;
 
+import org.match.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,14 +14,19 @@ import java.util.List;
  * Created by eugennekhai on 06/07/16.
  */
 @Controller
-@RequestMapping("/match")
 public class MatchController {
     @Autowired
     private MatchService matchService;
 
-    @RequestMapping(method= RequestMethod.GET)
+    @RequestMapping(value = "/match", method= RequestMethod.GET)
     @ResponseBody
     public List<String> matchedWords(@RequestParam String q) {
         return matchService.match(q);
+    }
+
+    @RequestMapping(value = "/fastMatch", method= RequestMethod.GET)
+    @ResponseBody
+    public List<String> trieSearch(@RequestParam String q) {
+        return matchService.triesMatch(q);
     }
 }

@@ -1,5 +1,7 @@
-package org.match;
+package org.match.service;
 
+import org.match.data.NGrams;
+import org.match.data.Trie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ public class MatchService {
     @Autowired
     private ResourceLoader resourceLoader;
     private List<String> lines = new ArrayList<>();
+    private final Trie trie = new Trie();
 
     @PostConstruct
     public void init() {
@@ -30,6 +33,7 @@ public class MatchService {
 
         try {
             lines = Files.readAllLines(resource.getFile().toPath());
+            lines.forEach(trie::insert);
         } catch (IOException ex) {
             logger.error(ex.toString());
         }
@@ -37,6 +41,12 @@ public class MatchService {
     }
 
     public List<String> match(String value) {
-        return lines.stream().filter(value::contains).collect(Collectors.toList());
+        return new NGrams(value).content().stream().filter(lines::contains).collect(Collectors.toList());
     }
+
+    public List<String> triesMatch(String value) {
+        return new NGrams(value).content().stream().filter(trie::search).collect(Collectors.toList());
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package org.match;
+package org.match.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -6,6 +6,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.match.MatchConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -24,6 +25,8 @@ import static io.restassured.RestAssured.given;
 public class MatchControllerIT {
     @Value("${local.server.port}")   //
     int port;
+    String input = "I have a sore throat and headache.";
+    String output = "[\"sore throat\",\"headache\"]";
 
     @Before
     public void setUp() {
@@ -32,13 +35,23 @@ public class MatchControllerIT {
 
     @Test
     public void shouldFindMatchedPhrases() {
-        String input = "I have a sore throat and headache.";
-        String output = "[\"headache\",\"sore throat\"]";
-
         given().
                 param("q", input).
         when().
                 get("/match").
+        then().
+                contentType(ContentType.JSON).
+                statusCode(HttpStatus.OK.value()).
+        assertThat().
+                body(CoreMatchers.is(output));
+    }
+
+    @Test
+    public void shouldFindPhrasesUsingTriesMatch() {
+        given().
+                param("q", input).
+        when().
+                get("/fastMatch").
         then().
                 contentType(ContentType.JSON).
                 statusCode(HttpStatus.OK.value()).
