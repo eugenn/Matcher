@@ -1,7 +1,7 @@
 package org.match.service;
 
-import org.match.data.NGrams;
-import org.match.data.Trie;
+import org.match.elements.NGrams;
+import org.match.elements.Trie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
