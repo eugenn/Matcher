@@ -25,13 +25,11 @@ public class NGrams implements Content {
         for (ListIterator<String> it = tokens.listIterator(); it.hasNext(); ) {
             String word = it.next();
 
-            //1- add the word itself
             sb = new StringBuilder(word);
             ngrams.add(word);
             ngramSize = 1;
             it.previous();
 
-            //2- insert prevs of the word and add those too
             while (it.hasPrevious() && ngramSize < maxGramSize) {
                 sb.insert(0, ' ');
                 sb.insert(0, it.previous());
@@ -39,7 +37,6 @@ public class NGrams implements Content {
                 ngramSize++;
             }
 
-            //go back to initial position
             while (ngramSize > 0) {
                 ngramSize--;
                 it.next();
